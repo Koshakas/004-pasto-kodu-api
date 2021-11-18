@@ -1,0 +1,22 @@
+{
+  "name": "003",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Konstantinas Jariomenko",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^4.6.0",
+    "webpack": "^5.64.1"
+  },
+  "devDependencies": {
+    "laravel-mix": "^6.0.39",
+    "resolve-url-loader": "^4.0.0",
+    "sass": "^1.43.4",
+    "sass-loader": "^12.1.0"
+  }
+}
