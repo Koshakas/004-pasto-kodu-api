@@ -10,8 +10,36 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_renderForm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/renderForm */ "./src/modules/renderForm.js");
+/* harmony import */ var _modules_searchCode__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/searchCode */ "./src/modules/searchCode.js");
+/* harmony import */ var _modules_searchList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/searchList */ "./src/modules/searchList.js");
+
+
 
 (0,_modules_renderForm__WEBPACK_IMPORTED_MODULE_0__["default"])();
+(0,_modules_searchCode__WEBPACK_IMPORTED_MODULE_1__["default"])();
+(0,_modules_searchList__WEBPACK_IMPORTED_MODULE_2__["default"])();
+
+/***/ }),
+
+/***/ "./src/modules/ajaxService.js":
+/*!************************************!*\
+  !*** ./src/modules/ajaxService.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var ajaxService = function ajaxService(term) {
+  var url = "https://api.postit.lt/?term=";
+  var key = "TFipepcdKtqyqwrwheg6";
+  return fetch("".concat(url).concat(term, "&key=").concat(key)).then(function (responce) {
+    return responce.json();
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ajaxService);
 
 /***/ }),
 
@@ -26,7 +54,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 var form = function form() {
-  return "\n    <div class=\"form-group mb-2\">\n        <input type=\"text\" class=\"form-control term\" placeholder=\"Adresas\">\n    </div>\n    <div class=\"form-group mx-sm-3 mb-2\">\n        <input type=\"text\" class=\"form-control result\" readonly >\n    </div>\n    <div>\n        <button type=\"submit\" class=\"btn btn-primary mb-2\">Ie\u0161koti kodo</button>\n        <button type=\"reset\" class=\"btn btn-primary mb-2 history\">Paie\u0161kos istorija</button>\n    </div>\n    ";
+  return "\n    <div class=\"form-group mb-2\">\n        <input type=\"text\" class=\"form-control term\" placeholder=\"Adresas\">\n    </div>\n    <div class=\"form-group mx-sm-3 mb-2\">\n        <input type=\"text\" class=\"form-control result\" readonly >\n    </div>\n    <div>\n        <button type=\"submit\" class=\"btn btn-primary mb-2\">Ie\u0161koti kodo</button>\n        <button type=\"reset\" class=\"btn btn-secondary mb-2 history\">Paie\u0161kos istorija</button>\n    </div>\n    ";
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (form);
@@ -54,6 +82,91 @@ var renderForm = function renderForm() {
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (renderForm);
+
+/***/ }),
+
+/***/ "./src/modules/searchCode.js":
+/*!***********************************!*\
+  !*** ./src/modules/searchCode.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ajaxService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ajaxService */ "./src/modules/ajaxService.js");
+/* harmony import */ var _storeSearch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./storeSearch */ "./src/modules/storeSearch.js");
+
+
+
+var searchCode = function searchCode() {
+  document.querySelector("form").addEventListener("submit", function (event) {
+    event.preventDefault();
+    var searchTerm = document.querySelector(".term").value;
+    var searchResponce;
+    (0,_ajaxService__WEBPACK_IMPORTED_MODULE_0__["default"])(searchTerm).then(function (result) {
+      searchResponce = result;
+    }).then(function () {
+      if (searchResponce.total > 0) {
+        console.log("searchResponce", searchResponce);
+        document.querySelector(".result").value = searchResponce.data[0].post_code;
+        (0,_storeSearch__WEBPACK_IMPORTED_MODULE_1__["default"])(searchResponce.data[0].post_code, searchResponce.data[0]);
+      } else {
+        document.querySelector("main").innerHTML += "<p>Klaida</p>";
+      }
+    });
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (searchCode);
+
+/***/ }),
+
+/***/ "./src/modules/searchList.js":
+/*!***********************************!*\
+  !*** ./src/modules/searchList.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var searchList = function searchList() {
+  document.querySelector(".history").addEventListener("click", function () {
+    for (var key in localStorage) {
+      if (localStorage.getItem(key) !== null) {
+        var result = JSON.parse(localStorage.getItem(key));
+        console.log(result);
+        var li = document.createElement("li");
+        li.className = "list-group-item";
+        li.textContent = "Adresas: ".concat(result.address, ". Pa\u0161to kodas: ").concat(result.post_code);
+        document.querySelector("ul").appendChild(li);
+      }
+    }
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (searchList);
+
+/***/ }),
+
+/***/ "./src/modules/storeSearch.js":
+/*!************************************!*\
+  !*** ./src/modules/storeSearch.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var storeSearch = function storeSearch(id, data) {
+  localStorage.setItem(id, JSON.stringify(data));
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (storeSearch);
 
 /***/ }),
 

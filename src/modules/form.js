@@ -8,7 +8,7 @@ const form = () => {
     </div>
     <div>
         <button type="submit" class="btn btn-primary mb-2">Ieškoti kodo</button>
-        <button type="reset" class="btn btn-primary mb-2 history">Paieškos istorija</button>
+        <button type="reset" class="btn btn-secondary mb-2 history">Paieškos istorija</button>
     </div>
     `;
 };
