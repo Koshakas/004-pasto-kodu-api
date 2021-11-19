@@ -9,6 +9,7 @@ const form = () => {
     <div>
         <button type="submit" class="btn btn-primary mb-2">Ieškoti kodo</button>
         <button type="reset" class="btn btn-secondary mb-2 history">Paieškos istorija</button>
+        <button type="button" class="btn btn-danger mb-2 hidden">Trinti istoriją</button>
     </div>
     `;
 };

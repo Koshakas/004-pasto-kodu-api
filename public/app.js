@@ -12,12 +12,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_renderForm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/renderForm */ "./src/modules/renderForm.js");
 /* harmony import */ var _modules_searchCode__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/searchCode */ "./src/modules/searchCode.js");
 /* harmony import */ var _modules_searchList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/searchList */ "./src/modules/searchList.js");
+/* harmony import */ var _modules_clearHistory__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/clearHistory */ "./src/modules/clearHistory.js");
+
 
 
 
 (0,_modules_renderForm__WEBPACK_IMPORTED_MODULE_0__["default"])();
 (0,_modules_searchCode__WEBPACK_IMPORTED_MODULE_1__["default"])();
 (0,_modules_searchList__WEBPACK_IMPORTED_MODULE_2__["default"])();
+(0,_modules_clearHistory__WEBPACK_IMPORTED_MODULE_3__["default"])();
 
 /***/ }),
 
@@ -43,6 +46,29 @@ var ajaxService = function ajaxService(term) {
 
 /***/ }),
 
+/***/ "./src/modules/clearHistory.js":
+/*!*************************************!*\
+  !*** ./src/modules/clearHistory.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var clearHistory = function clearHistory() {
+  var button = document.querySelector(".btn-danger");
+  button.addEventListener("click", function (e) {
+    localStorage.clear();
+    button.classList.add("hidden");
+    document.querySelector("ul").innerHTML = "";
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (clearHistory);
+
+/***/ }),
+
 /***/ "./src/modules/form.js":
 /*!*****************************!*\
   !*** ./src/modules/form.js ***!
@@ -54,7 +80,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 var form = function form() {
-  return "\n    <div class=\"form-group mb-2\">\n        <input type=\"text\" class=\"form-control term\" placeholder=\"Adresas\">\n    </div>\n    <div class=\"form-group mx-sm-3 mb-2\">\n        <input type=\"text\" class=\"form-control result\" readonly >\n    </div>\n    <div>\n        <button type=\"submit\" class=\"btn btn-primary mb-2\">Ie\u0161koti kodo</button>\n        <button type=\"reset\" class=\"btn btn-secondary mb-2 history\">Paie\u0161kos istorija</button>\n    </div>\n    ";
+  return "\n    <div class=\"form-group mb-2\">\n        <input type=\"text\" class=\"form-control term\" placeholder=\"Adresas\">\n    </div>\n    <div class=\"form-group mx-sm-3 mb-2\">\n        <input type=\"text\" class=\"form-control result\" readonly >\n    </div>\n    <div>\n        <button type=\"submit\" class=\"btn btn-primary mb-2\">Ie\u0161koti kodo</button>\n        <button type=\"reset\" class=\"btn btn-secondary mb-2 history\">Paie\u0161kos istorija</button>\n        <button type=\"button\" class=\"btn btn-danger mb-2 hidden\">Trinti istorij\u0105</button>\n    </div>\n    ";
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (form);
@@ -134,7 +160,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 var searchList = function searchList() {
+  var ul = document.querySelector("ul");
+  var deleteBtn = document.querySelector("button.hidden");
   document.querySelector(".history").addEventListener("click", function () {
+    ul.innerHTML = "";
+
     for (var key in localStorage) {
       if (localStorage.getItem(key) !== null) {
         var result = JSON.parse(localStorage.getItem(key));
@@ -142,8 +172,12 @@ var searchList = function searchList() {
         var li = document.createElement("li");
         li.className = "list-group-item";
         li.textContent = "Adresas: ".concat(result.address, ". Pa\u0161to kodas: ").concat(result.post_code);
-        document.querySelector("ul").appendChild(li);
+        ul.appendChild(li);
       }
+    }
+
+    if (ul.innerHTML) {
+      deleteBtn.classList.remove("hidden");
     }
   });
 };

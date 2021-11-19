@@ -1,5 +1,8 @@
 const searchList = () => {
+    const ul = document.querySelector("ul");
+    const deleteBtn = document.querySelector("button.hidden");
     document.querySelector(".history").addEventListener("click", () => {
+        ul.innerHTML = "";
         for (let key in localStorage) {
             if (localStorage.getItem(key) !== null) {
                 let result = JSON.parse(localStorage.getItem(key));
@@ -7,8 +10,11 @@ const searchList = () => {
                 const li = document.createElement("li");
                 li.className = "list-group-item";
                 li.textContent = `Adresas: ${result.address}. Pašto kodas: ${result.post_code}`;
-                document.querySelector("ul").appendChild(li);
+                ul.appendChild(li);
             }
+        }
+        if (ul.innerHTML) {
+            deleteBtn.classList.remove("hidden");
         }
     });
 };
