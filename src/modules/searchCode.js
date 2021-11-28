@@ -5,7 +5,9 @@ const searchCode = () => {
     document.querySelector("form").addEventListener("submit", event => {
         event.preventDefault();
         const searchTerm = document.querySelector(".term").value;
+
         let searchResponce;
+
         ajaxService(searchTerm)
             .then(result => {
                 searchResponce = result;

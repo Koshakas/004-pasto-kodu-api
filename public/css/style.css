@@ -10006,3 +10006,31 @@ h3 {
 .hidden {
   display: none;
 }
+
+.form-inline .form-group.input {
+  flex-direction: column;
+}
+
+.autocomplete {
+  display: none;
+  position: absolute;
+  top: 57px;
+  left: 19px;
+  z-index: 10;
+  background-color: white;
+  width: 227px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+}
+.autocomplete ul {
+  margin: 10px 0;
+  padding: 0;
+}
+.autocomplete li {
+  list-style-type: none;
+  padding: 5px 10px;
+}
+.autocomplete li:hover {
+  background-color: #e9ecef;
+  cursor: pointer;
+}

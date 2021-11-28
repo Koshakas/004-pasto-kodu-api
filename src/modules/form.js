@@ -1,7 +1,11 @@
 const form = () => {
     return `
-    <div class="form-group mb-2">
-        <input type="text" class="form-control term" placeholder="Adresas">
+    <div class="form-group mb-2 input">
+        <input id="address" type="text" class="form-control term" placeholder="Adresas">
+        <div class="autocomplete">
+            <ul>
+            </ul>
+        </div>
     </div>
     <div class="form-group mx-sm-3 mb-2">
         <input type="text" class="form-control result" readonly >

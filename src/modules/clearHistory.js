@@ -3,7 +3,7 @@ const clearHistory = () => {
     button.addEventListener("click", e => {
         localStorage.clear();
         button.classList.add("hidden");
-        document.querySelector("ul").innerHTML = "";
+        document.querySelector("ul.list-group").innerHTML = "";
     });
 };
 

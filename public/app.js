@@ -13,12 +13,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_searchCode__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/searchCode */ "./src/modules/searchCode.js");
 /* harmony import */ var _modules_searchList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/searchList */ "./src/modules/searchList.js");
 /* harmony import */ var _modules_clearHistory__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/clearHistory */ "./src/modules/clearHistory.js");
+/* harmony import */ var _modules_autoComplete__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/autoComplete */ "./src/modules/autoComplete.js");
+
 
 
 
 
 (0,_modules_renderForm__WEBPACK_IMPORTED_MODULE_0__["default"])();
 (0,_modules_searchCode__WEBPACK_IMPORTED_MODULE_1__["default"])();
+(0,_modules_autoComplete__WEBPACK_IMPORTED_MODULE_4__["default"])();
 (0,_modules_searchList__WEBPACK_IMPORTED_MODULE_2__["default"])();
 (0,_modules_clearHistory__WEBPACK_IMPORTED_MODULE_3__["default"])();
 
@@ -46,6 +49,67 @@ var ajaxService = function ajaxService(term) {
 
 /***/ }),
 
+/***/ "./src/modules/autoComplete.js":
+/*!*************************************!*\
+  !*** ./src/modules/autoComplete.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ajaxService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ajaxService */ "./src/modules/ajaxService.js");
+/* harmony import */ var _storeSearch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./storeSearch */ "./src/modules/storeSearch.js");
+/* harmony import */ var _renderHistory__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./renderHistory */ "./src/modules/renderHistory.js");
+
+
+
+
+var autoComplete = function autoComplete() {
+  var div = document.querySelector(".autocomplete");
+  var ulAutoComplete = div.querySelector("ul");
+  document.querySelector("#address").addEventListener("keypress", function (event) {
+    var searchTerm = event.target.value;
+    div.style.display = "none";
+
+    if (searchTerm.length > 2) {
+      var searchResponce;
+      (0,_ajaxService__WEBPACK_IMPORTED_MODULE_0__["default"])(searchTerm).then(function (result) {
+        searchResponce = result;
+      }).then(function () {
+        var l;
+
+        if (searchResponce.total > 0) {
+          div.style.display = "block";
+          searchResponce.total > 10 ? l = 10 : l = searchResponce.total;
+          ulAutoComplete.innerHTML = "";
+
+          var _loop = function _loop(i) {
+            var li = document.createElement("li");
+            li.innerText = searchResponce.data[i].address + ", " + searchResponce.data[i].city;
+            ulAutoComplete.appendChild(li);
+            li.addEventListener("click", function () {
+              (0,_storeSearch__WEBPACK_IMPORTED_MODULE_1__["default"])(searchResponce.data[i].post_code, searchResponce.data[i]);
+              ulAutoComplete.innerHTML = "";
+              div.style.display = "none";
+              document.querySelector(".term").value = searchResponce.data[i].address;
+            });
+          };
+
+          for (var i = 0; i < l; i++) {
+            _loop(i);
+          }
+        }
+      });
+    }
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (autoComplete);
+
+/***/ }),
+
 /***/ "./src/modules/clearHistory.js":
 /*!*************************************!*\
   !*** ./src/modules/clearHistory.js ***!
@@ -61,7 +125,7 @@ var clearHistory = function clearHistory() {
   button.addEventListener("click", function (e) {
     localStorage.clear();
     button.classList.add("hidden");
-    document.querySelector("ul").innerHTML = "";
+    document.querySelector("ul.list-group").innerHTML = "";
   });
 };
 
@@ -80,7 +144,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 var form = function form() {
-  return "\n    <div class=\"form-group mb-2\">\n        <input type=\"text\" class=\"form-control term\" placeholder=\"Adresas\">\n    </div>\n    <div class=\"form-group mx-sm-3 mb-2\">\n        <input type=\"text\" class=\"form-control result\" readonly >\n    </div>\n    <div>\n        <button type=\"submit\" class=\"btn btn-primary mb-2\">Ie\u0161koti kodo</button>\n        <button type=\"reset\" class=\"btn btn-secondary mb-2 history\">Paie\u0161kos istorija</button>\n        <button type=\"button\" class=\"btn btn-danger mb-2 hidden\">Trinti istorij\u0105</button>\n    </div>\n    ";
+  return "\n    <div class=\"form-group mb-2 input\">\n        <input id=\"address\" type=\"text\" class=\"form-control term\" placeholder=\"Adresas\">\n        <div class=\"autocomplete\">\n            <ul>\n            </ul>\n        </div>\n    </div>\n    <div class=\"form-group mx-sm-3 mb-2\">\n        <input type=\"text\" class=\"form-control result\" readonly >\n    </div>\n    <div>\n        <button type=\"submit\" class=\"btn btn-primary mb-2\">Ie\u0161koti kodo</button>\n        <button type=\"reset\" class=\"btn btn-secondary mb-2 history\">Paie\u0161kos istorija</button>\n        <button type=\"button\" class=\"btn btn-danger mb-2 hidden\">Trinti istorij\u0105</button>\n    </div>\n    ";
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (form);
@@ -108,6 +172,33 @@ var renderForm = function renderForm() {
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (renderForm);
+
+/***/ }),
+
+/***/ "./src/modules/renderHistory.js":
+/*!**************************************!*\
+  !*** ./src/modules/renderHistory.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function renderHistory(ul) {
+  for (var key in localStorage) {
+    if (localStorage.getItem(key) !== null) {
+      var result = JSON.parse(localStorage.getItem(key));
+      console.log(result);
+      var li = document.createElement("li");
+      li.className = "list-group-item";
+      li.textContent = "Adresas: ".concat(result.address, ". Pa\u0161to kodas: ").concat(result.post_code);
+      ul.appendChild(li);
+    }
+  }
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (renderHistory);
 
 /***/ }),
 
@@ -159,22 +250,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _renderHistory__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./renderHistory */ "./src/modules/renderHistory.js");
+
+
 var searchList = function searchList() {
-  var ul = document.querySelector("ul");
+  var ul = document.querySelector("ul.list-group");
   var deleteBtn = document.querySelector("button.hidden");
   document.querySelector(".history").addEventListener("click", function () {
     ul.innerHTML = "";
-
-    for (var key in localStorage) {
-      if (localStorage.getItem(key) !== null) {
-        var result = JSON.parse(localStorage.getItem(key));
-        console.log(result);
-        var li = document.createElement("li");
-        li.className = "list-group-item";
-        li.textContent = "Adresas: ".concat(result.address, ". Pa\u0161to kodas: ").concat(result.post_code);
-        ul.appendChild(li);
-      }
-    }
+    (0,_renderHistory__WEBPACK_IMPORTED_MODULE_0__["default"])(ul);
 
     if (ul.innerHTML) {
       deleteBtn.classList.remove("hidden");
